@@ -304,6 +304,8 @@
                 background: #f1f1f1; 
             }
         }
+
+
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <title>Mapa ANIMALx</title>
@@ -514,6 +516,7 @@
                 </aside>
             </main>
         </div>
+
         
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
@@ -1065,7 +1068,12 @@
                     var props = feature.properties;
                     
                     var nomeComum = props.nome_comum ? String(props.nome_comum).toLowerCase() : '';
-                    if (termoPesquisa !== "" && !nomeComum.includes(termoPesquisa)) return false;
+                    if (termoPesquisa !== "") {
+                            // 1. Divide a pesquisa por vírgulas e limpa espaços extra
+                            var termos = termoPesquisa.split(',').map(t => t.trim()).filter(t => t !== "");
+                            var corresponde = termos.some(termo => nomeComum.includes(termo));
+                            if (!corresponde) return false;
+                        }
 
                     var categoriaPonto = getCategoriaRegisto(props);
                     if (filtroRegistoAtivo !== 'todos' && categoriaPonto !== filtroRegistoAtivo) return false;
@@ -1294,6 +1302,7 @@
                     }, 500);
                 }
             });
-        </script>        
+        </script>   
+
     </body>
 </html>
